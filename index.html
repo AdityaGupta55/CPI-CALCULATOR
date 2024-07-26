@@ -20,7 +20,7 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
+            max-width: 600px;
             width: 100%;
         }
         .course {
@@ -28,6 +28,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
+            gap: 10px;
         }
         .course label {
             flex: 1;
@@ -56,15 +57,21 @@
             color: #333;
             margin-top: 20px;
         }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
     </style>
     <script>
         function addCourse() {
             const courseContainer = document.getElementById('courses');
+            const courseNames = Array.from(document.getElementsByName('course')).map(input => input.value.trim().toLowerCase());
+
             const courseDiv = document.createElement('div');
             courseDiv.classList.add('course');
 
             courseDiv.innerHTML = `
-                <label>Course: <input type="text" name="course"></label>
+                <label>Course: <input type="text" name="course" oninput="checkDuplicateCourse(this)"></label>
                 <label>Grade: 
                     <select name="grade">
                         <option value="10">A*</option>
@@ -87,19 +94,42 @@
             courseContainer.appendChild(courseDiv);
         }
 
+        function checkDuplicateCourse(input) {
+            const courseNames = Array.from(document.getElementsByName('course')).map(i => i.value.trim().toLowerCase());
+            const currentCourseName = input.value.trim().toLowerCase();
+
+            if (courseNames.filter(name => name === currentCourseName).length > 1) {
+                input.setCustomValidity("Duplicate course names are not allowed.");
+                input.reportValidity();
+            } else {
+                input.setCustomValidity("");
+            }
+        }
+
         function removeCourse(button) {
             const courseDiv = button.parentElement;
             courseDiv.remove();
         }
 
         function calculateCPI() {
+            const courses = document.getElementsByName('course');
             const grades = document.getElementsByName('grade');
             const credits = document.getElementsByName('credit');
 
             let totalGradePoints = 0;
             let totalCredits = 0;
+            let courseNames = new Set();
+            let error = false;
 
-            for (let i = 0; i < grades.length; i++) {
+            for (let i = 0; i < courses.length; i++) {
+                const courseName = courses[i].value.trim();
+                if (courseNames.has(courseName)) {
+                    document.getElementById('error').innerText = 'Error: Duplicate course names are not allowed.';
+                    error = true;
+                    break;
+                }
+                courseNames.add(courseName);
+                
                 const gradeValue = parseFloat(grades[i].value);
                 const creditValue = parseFloat(credits[i].value);
 
@@ -107,9 +137,11 @@
                 totalCredits += creditValue;
             }
 
-            const cpi = totalGradePoints / totalCredits;
-
-            document.getElementById('result').innerText = `Your CPI/CGPA is: ${cpi.toFixed(2)}`;
+            if (!error) {
+                document.getElementById('error').innerText = '';
+                const cpi = totalGradePoints / totalCredits;
+                document.getElementById('result').innerText = `Your CPI/CGPA is: ${cpi.toFixed(2)}`;
+            }
         }
     </script>
 </head>
@@ -120,6 +152,7 @@
         <button type="button" onclick="addCourse()">Add Course</button>
         <button type="button" onclick="calculateCPI()">Calculate CPI/CGPA</button>
         <h2 id="result"></h2>
+        <p id="error" class="error"></p>
     </div>
 </body>
 </html>
