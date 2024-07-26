@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPI/CGPA Calculator</title>
+    <script>
+        function addCourse() {
+            const courseContainer = document.getElementById('courses');
+            const courseDiv = document.createElement('div');
+
+            courseDiv.innerHTML = `
+                <label>Course: <input type="text" name="course"></label>
+                <label>Grade: 
+                    <select name="grade">
+                        <option value="10">A*</option>
+                        <option value="10">A</option>
+                        <option value="9">B+</option>
+                        <option value="8">B</option>
+                        <option value="7">C+</option>
+                        <option value="6">C</option>
+                        <option value="5">D+</option>
+                        <option value="4">D</option>
+                        <option value="2">E</option>
+                        <option value="0">F</option>
+                    </select>
+                </label>
+                <label>Credits: <input type="number" name="credit" min="0"></label>
+                <button type="button" onclick="removeCourse(this)">Remove</button>
+                <br>
+            `;
+
+            courseContainer.appendChild(courseDiv);
+        }
+
+        function removeCourse(button) {
+            const courseDiv = button.parentElement;
+            courseDiv.remove();
+        }
+
+        function calculateCPI() {
+            const grades = document.getElementsByName('grade');
+            const credits = document.getElementsByName('credit');
+
+            let totalGradePoints = 0;
+            let totalCredits = 0;
+
+            for (let i = 0; i < grades.length; i++) {
+                const gradeValue = parseFloat(grades[i].value);
+                const creditValue = parseFloat(credits[i].value);
+
+                totalGradePoints += gradeValue * creditValue;
+                totalCredits += creditValue;
+            }
+
+            const cpi = totalGradePoints / totalCredits;
+
+            document.getElementById('result').innerText = `Your CPI/CGPA is: ${cpi.toFixed(2)}`;
+        }
+    </script>
+</head>
+<body>
+    <h1>CPI/CGPA Calculator</h1>
+    <div id="courses"></div>
+    <button type="button" onclick="addCourse()">Add Course</button>
+    <button type="button" onclick="calculateCPI()">Calculate CPI/CGPA</button>
+    <h2 id="result"></h2>
+</body>
+</html>
