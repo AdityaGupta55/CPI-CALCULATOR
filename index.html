@@ -4,10 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CPI/CGPA Calculator</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+        }
+        .container {
+            text-align: center;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        .course {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .course label {
+            flex: 1;
+            margin: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        h1 {
+            color: #333;
+        }
+        h2 {
+            color: #333;
+            margin-top: 20px;
+        }
+    </style>
     <script>
         function addCourse() {
             const courseContainer = document.getElementById('courses');
             const courseDiv = document.createElement('div');
+            courseDiv.classList.add('course');
 
             courseDiv.innerHTML = `
                 <label>Course: <input type="text" name="course"></label>
@@ -60,10 +114,12 @@
     </script>
 </head>
 <body>
-    <h1>CPI/CGPA Calculator</h1>
-    <div id="courses"></div>
-    <button type="button" onclick="addCourse()">Add Course</button>
-    <button type="button" onclick="calculateCPI()">Calculate CPI/CGPA</button>
-    <h2 id="result"></h2>
+    <div class="container">
+        <h1>CPI/CGPA Calculator</h1>
+        <div id="courses"></div>
+        <button type="button" onclick="addCourse()">Add Course</button>
+        <button type="button" onclick="calculateCPI()">Calculate CPI/CGPA</button>
+        <h2 id="result"></h2>
+    </div>
 </body>
 </html>
